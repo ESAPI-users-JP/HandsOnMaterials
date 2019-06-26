@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Excercise_PlanCheck", "Excercise_PlanCheck.csproj", "{458015B4-8FE8-4D58-84BD-06F728785266}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{458015B4-8FE8-4D58-84BD-06F728785266}.Debug|x64.ActiveCfg = Debug|x64
+		{458015B4-8FE8-4D58-84BD-06F728785266}.Debug|x64.Build.0 = Debug|x64
+		{458015B4-8FE8-4D58-84BD-06F728785266}.Release|x64.ActiveCfg = Release|x64
+		{458015B4-8FE8-4D58-84BD-06F728785266}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {735197C7-C275-494B-91FE-F5A28E671C52}
+	EndGlobalSection
+EndGlobal
