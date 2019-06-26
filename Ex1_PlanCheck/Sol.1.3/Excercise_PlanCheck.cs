@@ -299,7 +299,7 @@ namespace VMS.TPS
                     if (beam.Meterset.Value < minMU)
                     {
                         validFlag = false;
-                        invalidMU = "(" + beam.Id + ":" + string.Format("{0:f1}", beam.Meterset.Value) + ")";
+                        invalidMU += "(" + beam.Id + ":" + string.Format("{0:f1}", beam.Meterset.Value) + ")";
                     }
                 }
             }
