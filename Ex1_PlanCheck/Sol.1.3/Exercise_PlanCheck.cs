@@ -78,12 +78,12 @@ namespace VMS.TPS
             messageText += CheckRPFunc(plan);
 
             messageText += "\n";
-            // Referene point check routine.
+            // Structure check routine.
             messageText += "<<STRUCTURE CHECK " + new String(paddingChar, paddingLength) + "\n";
             messageText += CheckStructureFunc(plan);
 
             messageText += "\n";
-            // Referene point check routine.
+            // Dose check routine.
             messageText += "<<DOSE CHECK " + new String(paddingChar, paddingLength) + "\n";
             messageText += CheckDoseFunc(plan);
 
