@@ -208,7 +208,7 @@ namespace VMS.TPS
             // Check course ID 
             checkName = "Course ID";
             //Set regular expression
-            string expressionC = "^C(?<number>[0-9]{1,2}$)";
+            string expressionC = "^C[0-9]{1,2}$";
             Regex regC = new Regex(expressionC);
             Match resultC = regC.Match(plan.Course.Id);
 
@@ -226,7 +226,7 @@ namespace VMS.TPS
             // Check plan ID 
             checkName = "Plan ID";
             //Set regular expression
-            string expressionP = "^(?<number>[0-9]{1,2})-[0-9]{1,2}$";
+            string expressionP = "^[0-9]{1,2}-[0-9]{1,2}$";
             Regex regP = new Regex(expressionP);
             Match resultP = regP.Match(plan.Id);
 
