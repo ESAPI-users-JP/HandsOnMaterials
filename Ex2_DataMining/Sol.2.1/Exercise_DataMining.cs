@@ -18,7 +18,7 @@ using System.Collections.ObjectModel;
 // TODO: Uncomment the following line if the script requires write access.
 // [assembly: ESAPIScript(IsWriteable = true)]
 
-namespace Excercise_DataMining
+namespace Exercise_DataMining
 {
     class Program
     {
@@ -120,7 +120,7 @@ namespace Excercise_DataMining
         /// <param name="reportFile"></param>
         static void ReportOnePlan(Patient patient, PlanSetup ps, StreamWriter reportFile)
         {
-            // Change types of presentation for dose values to absolute.
+            // Change type of presentation for dose value to absolute.
             ps.DoseValuePresentation = DoseValuePresentation.Absolute;
 
             // Initialize output text
@@ -133,7 +133,7 @@ namespace Excercise_DataMining
 
             // TODO : Add here the code /////////////////////////////////////////////////////////////
 
-            // Get plan informations. ////////////////////////////////////////////////////////////////
+            // Get plan information. ////////////////////////////////////////////////////////////////
             // Get plan normalization method.
             msg += ps.PlanNormalizationMethod + "\t";
 
@@ -173,7 +173,7 @@ namespace Excercise_DataMining
             msg += CalculationModel + "\t";
 
 
-            // Get field informations. ////////////////////////////////////////////////////////////////
+            // Get field information. ////////////////////////////////////////////////////////////////
             var energy_List = new List<string>();
             var mu_List = new List<string>();
             int nBeam = 0;
@@ -192,7 +192,7 @@ namespace Excercise_DataMining
             msg += "MU:" + string.Join("/", mu_List) + "\t"; // Combine all values with "/".
             ///////////////////////////////////////////////////////////////////////////////////////////
 
-            // Get DVH statistic informations. ///////////////////////////////////////////////////////////////////
+            // Get DVH statistic information. ///////////////////////////////////////////////////////////////////
 
             // calculate Max/Mean/Min dose.
             // Initialize variables. 
@@ -224,12 +224,12 @@ namespace Excercise_DataMining
             }
 
 
-            // Calculate Dose Qualiy Parameters (VolumeAtDose,DoseAtVolume,DoseComplement,ComplementVolume).
+            // Calculate Dose Quality Parameters (VolumeAtDose,DoseAtVolume,DoseComplement,ComplementVolume).
             var DQPList = new Collection<DQP>();
             // define parameters
             DQPList.Add(new DQP
             {
-                strctureName = "Prostate",
+                structureName = "Prostate",
                 DQPtype = DQPtype.Dose,
                 DQPvalue = 95.0,
                 InputUnit = IOUnit.Relative,
@@ -237,7 +237,7 @@ namespace Excercise_DataMining
             });
             DQPList.Add(new DQP
             {
-                strctureName = "Rectum",
+                structureName = "Rectum",
                 DQPtype = DQPtype.Volume,
                 DQPvalue = 70,
                 InputUnit = IOUnit.Relative,
@@ -315,7 +315,7 @@ namespace Excercise_DataMining
             foreach (var row in DQPList)
             {
 
-                targetStructure = ps.StructureSet.Structures.Where(s => s.Id == row.strctureName).FirstOrDefault();
+                targetStructure = ps.StructureSet.Structures.Where(s => s.Id == row.structureName).FirstOrDefault();
                 
                 // Execute if the structure name match.
                 if (targetStructure != null)
@@ -327,22 +327,22 @@ namespace Excercise_DataMining
                     // define prefix DQP name.
                     if (row.DQPtype == DQPtype.Dose)
                     {
-                        oText += row.strctureName + "-D" + row.DQPvalue.ToString();
+                        oText += row.structureName + "-D" + row.DQPvalue.ToString();
                     }
                     else if (row.DQPtype == DQPtype.Volume)
                     {
-                        oText += row.strctureName + "-V" + row.DQPvalue.ToString();
+                        oText += row.structureName + "-V" + row.DQPvalue.ToString();
                     }
                     else if (row.DQPtype == DQPtype.DoseComplement)
                     {
-                        oText += row.strctureName + "-DC" + row.DQPvalue.ToString();
+                        oText += row.structureName + "-DC" + row.DQPvalue.ToString();
                     }
                     else if (row.DQPtype == DQPtype.ComplementVolume)
                     {
-                        oText += row.strctureName + "-CV" + row.DQPvalue.ToString();
+                        oText += row.structureName + "-CV" + row.DQPvalue.ToString();
                     }
 
-                    // define input unit [Gy/cGy] or [cc] ot [%]
+                    // define input unit [Gy/cGy] or [cc] or [%]
                     if (row.InputUnit == IOUnit.Absolute)
                     {
                         if (row.DQPtype == DQPtype.Dose)
@@ -367,7 +367,7 @@ namespace Excercise_DataMining
                         oText += "%";
                     }
 
-                    // define output unit [Gy/cGy] or [cc] ot [%]
+                    // define output unit [Gy/cGy] or [cc] or [%]
                     if (row.OutputUnit == IOUnit.Absolute)
                     {
                         if (row.DQPtype == DQPtype.Dose)
@@ -393,7 +393,7 @@ namespace Excercise_DataMining
                     }
                     oText += ":";
 
-                    // calculate dose qualiy parameters (VolumeAtDose,DoseAtVolume,DoseComplement,ComplementVolume).
+                    // calculate dose quality parameters (VolumeAtDose,DoseAtVolume,DoseComplement,ComplementVolume).
                     if (row.DQPtype == DQPtype.Dose) // calculate DoseAtVolume.
                     {
                         DoseValue doseValue = ps.GetDoseAtVolume(targetStructure, row.DQPvalue,
@@ -403,12 +403,12 @@ namespace Excercise_DataMining
                     }
                     else if (row.DQPtype == DQPtype.Volume) // calculate VolumeAtDose.
                     {                        
-                        double voluemeValue = ps.GetVolumeAtDose(targetStructure,
+                        double volumeValue = ps.GetVolumeAtDose(targetStructure,
                             row.InputUnit == IOUnit.Relative ?
                             new DoseValue(ps.TotalDose.Dose * (row.DQPvalue * 0.01), dvhStat.MaxDose.Unit) :
                             new DoseValue(row.DQPvalue, dvhStat.MaxDose.Unit),
                              row.OutputUnit == IOUnit.Relative ? VolumePresentation.Relative : VolumePresentation.AbsoluteCm3);
-                        oText += voluemeValue.ToString();
+                        oText += volumeValue.ToString();
                     }
                     else if (row.DQPtype == DQPtype.DoseComplement) // calculate DoseComplement.
                     {
@@ -430,12 +430,12 @@ namespace Excercise_DataMining
                     }
                     else if (row.DQPtype == DQPtype.ComplementVolume) // calculate ComplementVolume.
                     {                        
-                        double voluemeValue = ps.GetVolumeAtDose(targetStructure,
+                        double volumeValue = ps.GetVolumeAtDose(targetStructure,
                            row.InputUnit == IOUnit.Relative ?
                            new DoseValue(ps.TotalDose.Dose * (row.DQPvalue * 0.01), dvhStat.MaxDose.Unit) :
                            new DoseValue(row.DQPvalue, dvhStat.MaxDose.Unit),
                            VolumePresentation.AbsoluteCm3);
-                        double CV = targetStructure.Volume - voluemeValue;
+                        double CV = targetStructure.Volume - volumeValue;
                         if (row.OutputUnit == IOUnit.Relative)
                         {
                             CV = (CV / targetStructure.Volume * 100);
@@ -476,7 +476,7 @@ namespace Excercise_DataMining
     public class DQP
     {
         // Structure name
-        public string strctureName { get; set; }
+        public string structureName { get; set; }
         // DQP type
         public DQPtype DQPtype { get; set; }
         public double DQPvalue { get; set; }

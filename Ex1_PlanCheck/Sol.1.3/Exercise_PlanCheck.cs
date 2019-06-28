@@ -286,7 +286,7 @@ namespace VMS.TPS
             string checkName = "";
 
             // Check MU 
-            checkName = "chek MU";
+            checkName = "check MU";
 
             double minMU = 5.0;
             bool validFlag = true;

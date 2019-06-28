@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets ="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProjectGuid>9e86dc92-f8b4-4c09-b893-b2927283192b</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{458015B4-8FE8-4D58-84BD-06F728785266}</ProjectGuid>
+    <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Excercise_DataMining</RootNamespace>
-    <AssemblyName>Excercise_DataMining</AssemblyName>
+    <RootNamespace>Exercise_PlanCheck</RootNamespace>
+    <AssemblyName>Exercise_PlanCheck</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -38,20 +39,23 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="VMS.TPS.Common.Model.API">
-      <HintPath>C:\Program Files\Varian\RTM\15.6\esapi\API\VMS.TPS.Common.Model.API.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>C:\Program Files (x86)\Varian\RTM\15.6\esapi\API\VMS.TPS.Common.Model.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="VMS.TPS.Common.Model.Types">
-      <HintPath>C:\Program Files\Varian\RTM\15.6\esapi\API\VMS.TPS.Common.Model.Types.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>C:\Program Files (x86)\Varian\RTM\15.6\esapi\API\VMS.TPS.Common.Model.Types.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Excercise_DataMining.cs" />
+    <Compile Include="Exercise_PlanCheck.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
