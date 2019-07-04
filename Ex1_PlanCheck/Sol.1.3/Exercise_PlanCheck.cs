@@ -316,7 +316,7 @@ namespace VMS.TPS
             return oText;
         }
         /// <summary>
-        /// 
+        /// checkRPFunc
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
@@ -329,7 +329,7 @@ namespace VMS.TPS
             return oText;
         }
         /// <summary>
-        /// 
+        /// CheckStructureFunc
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
