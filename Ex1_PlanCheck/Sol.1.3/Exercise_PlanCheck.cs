@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -24,7 +24,7 @@ namespace VMS.TPS
         public void Execute(ScriptContext context /*, System.Windows.Window window, ScriptEnvironment environment*/)
         {
             // TODO : Add here the code that is called when the script is launched from Eclipse.
-
+            
             //Retrieve PlanSetup class
             PlanSetup plan = context.PlanSetup;
             if (plan == null)
@@ -146,6 +146,7 @@ namespace VMS.TPS
             string oText = "";
             string checkName = "";
 
+            ////////////////////////////////////////////////////////////////////////////////
             // Check ImagingDeviceID
             checkName = "Imaging Device ID";
             string deviceName = "CT580W";
@@ -153,7 +154,7 @@ namespace VMS.TPS
             //Retreave Image class
             VMS.TPS.Common.Model.API.Image image = plan.StructureSet.Image;
 
-            if (image.Id == deviceName)
+            if (image.Series.ImagingDeviceId == deviceName)
             {
                 // If true, add text[O] to the string 
                 oText += MakeFormatText(true, checkName, "");
@@ -164,6 +165,7 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, image.Id + " --> " + deviceName);
             }
 
+            ////////////////////////////////////////////////////////////////////////////////
             // Check PatientOrientation
             checkName = "PatientOrientation";
             string PatientOrientation = "HeadFirstSupine";
@@ -192,6 +194,50 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, image.ImagingOrientation.ToString() + " <-> " + plan.TreatmentOrientation.ToString());
             }
 
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check imaging date of CT images
+            // CT images must be newest.
+            checkName = "ImageDate";
+            //Get open image creation date
+            DateTime cImgDateTime = image.CreationDateTime.Value;
+            DateTime datetime = DateTime.Now;
+            DateTime newestImgDate = cImgDateTime;
+            foreach(var study in plan.Course.Patient.Studies)
+            {
+                // Exclude QA(phantom) images
+                if(study.Comment != "ARIA RadOnc Study")
+                {
+                    foreach(var series in study.Series)
+                    {
+                        // Exclude kVCBCT images
+                        if(series.ImagingDeviceId !="")
+                        {
+                            foreach(var im in series.Images)
+                            {
+                                datetime = im.CreationDateTime.Value;
+                                if(datetime.Date>cImgDateTime.Date)
+                                {
+                                    newestImgDate = datetime;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+             if (newestImgDate.Date == cImgDateTime.Date)
+            {
+                // If true, add text[O] to the string 
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                //If false, add the paramters and text[X] to the string 
+                oText += MakeFormatText(false, checkName, cImgDateTime.ToString("yyyyMMdd") + " --> newest:" +  newestImgDate.ToString("yyyyMMdd"));
+            }
+
+
+
             return oText;
         }
         /// <summary>
@@ -205,6 +251,7 @@ namespace VMS.TPS
             string oText = "";
             string checkName = "";
 
+            ////////////////////////////////////////////////////////////////////////////////
             // Check course ID 
             checkName = "Course ID";
             //Set regular expression
@@ -223,6 +270,7 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, plan.Course.Id);
             }
 
+            ////////////////////////////////////////////////////////////////////////////////
             // Check plan ID 
             checkName = "Plan ID";
             //Set regular expression
@@ -241,6 +289,7 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, plan.Id);
             }
 
+            ////////////////////////////////////////////////////////////////////////////////
             // Check plan normalization method.
             checkName = "plan normalization method";
             string n_method = plan.PlanNormalizationMethod;
@@ -285,6 +334,36 @@ namespace VMS.TPS
             string oText = "";
             string checkName = "";
 
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check isocenter
+            // Plan isocenter must be single point
+            checkName = "check single isocenter";
+            bool isoChkFlg = true;
+
+            // Get 1st field isocenter position
+            VVector isoCNT = plan.Beams.ElementAt(0).IsocenterPosition;
+            foreach (var beam in plan.Beams)
+            {
+                // Compare isocenter position of 1st field with others
+                if(VVector.Distance(beam.IsocenterPosition, isoCNT) != 0)
+                {
+                    isoChkFlg=false;
+                }
+            }
+
+            if (isoChkFlg == true)
+            {
+                // If true, add text[O] to the string 
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                //If false, add the paramters and text[X] to the string 
+                oText += MakeFormatText(false, checkName, "multiple isocenter");
+            }
+
+
+            ////////////////////////////////////////////////////////////////////////////////
             // Check MU 
             checkName = "check MU";
 
@@ -323,7 +402,23 @@ namespace VMS.TPS
         static string CheckRPFunc(PlanSetup plan)
         {
             string oText = "";
+            string checkName = "";
 
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check primary reference point ID
+            // Primary reference point ID and plan ID must be the same
+            checkName ="check primary ref. point ID";
+
+            if (plan.PrimaryReferencePoint.Id == plan.Id)
+            {
+                // If true, add text[O] to the string 
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                //If false, add the paramters and text[X] to the string 
+                oText += MakeFormatText(false, checkName, "primary ref. point ID:"+plan.PrimaryReferencePoint.Id+",plan ID:"+plan.Id);
+            }
             // TODO : Add here the code 
 
             return oText;
