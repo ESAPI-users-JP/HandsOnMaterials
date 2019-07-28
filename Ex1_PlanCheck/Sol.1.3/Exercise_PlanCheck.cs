@@ -419,7 +419,52 @@ namespace VMS.TPS
                 //If false, add the paramters and text[X] to the string 
                 oText += MakeFormatText(false, checkName, "primary ref. point ID:"+plan.PrimaryReferencePoint.Id+",plan ID:"+plan.Id);
             }
-            // TODO : Add here the code 
+
+            ////////////////////////////////////////////////////////////////////////////////
+            // Reference Point と体表面の距離を算出
+            checkName = "distance between BODY and Primary Ref. Point";
+
+            // Reference Point座標の取得
+            if (plan.PrimaryReferencePoint.HasLocation(plan))
+            {
+                var refPointLocation = plan.PrimaryReferencePoint.GetReferencePointLocation(plan);
+
+                // 体輪郭の取得
+                var ss = plan.StructureSet;
+                var body = ss.Structures.First(s => s.DicomType == "EXTERNAL");
+
+                var z = ss.Image.ZSize;
+                double minDist = 10000;
+                for (int i = 0; i < z; i++)
+                {
+                    var contours = body.GetContoursOnImagePlane(i);
+                    if (contours.Length != 0)
+                    {
+                        foreach (var contour in contours)
+                        {
+                            foreach (var point in contour)
+                            {
+                                var dist = VVector.Distance(refPointLocation, point);
+                                if (minDist > dist)
+                                {
+                                    minDist = dist;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                oText += MakeFormatText(false, checkName, "Primary Reference Point has no location.");
+            }
+
+
+
+
+
+
 
             return oText;
         }
