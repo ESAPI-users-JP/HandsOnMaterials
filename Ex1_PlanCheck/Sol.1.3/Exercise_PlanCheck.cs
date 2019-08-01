@@ -321,6 +321,58 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, n_method);
             }
 
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check calculation model.
+            //
+
+            // Calculation model names
+            string AAA = "AAA";
+            string AcurosXB = "AEB";
+            // Commissioned calculation models(+version)
+            string AAA_version = AAA + "_15.6.03";        
+            string AcurosXB_version = AcurosXB + "_15.6.03";
+
+            //Check calculation models
+            checkName = "photon calculation model";
+            string photonCalculationModel = plan.PhotonCalculationModel;
+            if (photonCalculationModel != AAA_version)
+            {
+                oText += MakeFormatText(false, checkName, photonCalculationModel);
+            }
+            else if (photonCalculationModel != AcurosXB_version) 
+            {
+                oText += MakeFormatText(false, checkName, photonCalculationModel);
+            }
+            else
+            {
+                oText += MakeFormatText(true, checkName, "");
+            }
+
+            //Check calculation grid sizes
+            checkName = "calculation grid size";
+            double XRes_AAA = 2.5;
+            double XRes_AcurosXB = 2.0;
+            // calculation grid size
+            // The dose matrix resolution in X-direction in millimeters
+            double XRes = plan.Dose.XRes;
+            // The dose matrix resolution in Y-direction in millimeters
+            double YRes = plan.Dose.YRes;
+            // The dose matrix resolution in Z-direction in millimeters
+            double ZRes = plan.Dose.ZRes;
+
+            if (XRes != XRes_AAA && photonCalculationModel.IndexOf(AAA) >=0 )
+            {
+                oText += MakeFormatText(false, checkName, string.Format("{0:f1}", XRes) + " -> " + string.Format("{0:f1}", XRes_AAA));
+            }
+            else if (XRes != XRes_AcurosXB && photonCalculationModel.IndexOf(AcurosXB) >= 0)
+            {
+                oText += MakeFormatText(false, checkName, string.Format("{0:f1}", XRes) + " -> " + string.Format("{0:f1}", XRes_AcurosXB));
+            }
+            else
+            {
+                oText += MakeFormatText(true, checkName, "");
+            }
+
             return oText;
         }
         /// <summary>
@@ -333,6 +385,37 @@ namespace VMS.TPS
             //Initializes the variables
             string oText = "";
             string checkName = "";
+
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check Treatment Machine
+            //
+            checkName = "check treatment machine";
+            bool machineChkFlag = true;
+
+            //TreatmentMachineName (the 1st field)
+            string machine = plan.Beams.ElementAt(0).TreatmentUnit.Id;
+
+            foreach (var beam in plan.Beams)
+            {
+                if (!beam.IsSetupField)
+                {
+                    if (machine != beam.TreatmentUnit.Id)
+                    {
+                        //If false
+                        //flag -> false 
+                        machineChkFlag = false;
+                        //add the paramters to the string 
+                        oText += MakeFormatText(false, checkName, beam.Id + ": " + beam.TreatmentUnit.Id + " -> " + machine);
+                    }                 
+                }
+            }
+
+            // If true
+            if (machineChkFlag == true)
+            {    
+                //add OK to the string 
+                oText += MakeFormatText(true, checkName, "");
+            }
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check isocenter
@@ -446,7 +529,101 @@ namespace VMS.TPS
         {
             string oText = "";
 
-            // TODO : Add here the code 
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check DVH parameters
+            //
+
+            // scaling factor: Gy to cGy
+            double scaling_dose_unit = 100.0;
+            if (plan.TotalDose.UnitAsString == "Gy")
+            {
+                scaling_dose_unit = 1.0;
+            }
+
+            // Bin width of DVH curves
+            double binWidth = 0.001;
+
+            oText += " ----- Target volumes -------------------------- \n";
+
+            foreach (var structure in plan.StructureSet.Structures)
+            {
+                // CTV 
+                if (structure.Id.IndexOf("CTV") >= 0 && structure.DicomType == "CTV")
+                {
+                    // D98%
+                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth);
+                    DoseValue d_98 = plan.DoseAtVolume(dvhData, 98.0);
+                    oText += "(" + structure.Id + ") D98%:" + string.Format("{0:f2}", d_98.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
+                }
+
+                // PTV
+                if (structure.Id.IndexOf("PTV") >= 0 && structure.DicomType == "PTV")
+                {
+                    
+                    // D95%
+                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth);
+                    DoseValue d_95 = plan.DoseAtVolume(dvhData, 95.0);
+                    oText += "(" + structure.Id + ") D95%:" + string.Format("{0:f2}", d_95.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
+
+                    // HI 
+                    // Dmax/Dmin
+                    double maxDose = dvhData.MaxDose.Dose;
+                    double minDose = dvhData.MinDose.Dose;
+                    double homogeneityIndex = maxDose/minDose;
+                    oText += "(" + structure.Id + ") Homogeneity Index:" + string.Format("{0:f2}", homogeneityIndex) + "\n";
+
+
+                    // HI 
+                    // (D2% - D98%) / D50% 
+                    DoseValue d_2 = plan.DoseAtVolume(dvhData, 2.0);
+                    DoseValue d_98 = plan.DoseAtVolume(dvhData, 98.0);
+                    DoseValue d_50 = plan.DoseAtVolume(dvhData, 50.0);
+                    double homogeneityIndex_ICRU83 = (d_2.Dose - d_98.Dose)/d_50.Dose;
+                    oText += "(" + structure.Id + ") Homogeneity Index(ICRU 83):" + string.Format("{0:f2}", homogeneityIndex_ICRU83) + "\n";
+
+                }
+            }
+
+            oText += " ----- OARs -------------------------- \n";
+
+            foreach (var structure in plan.StructureSet.Structures)
+            {
+                // Change uppercase letters to lowercase
+                String str_lowercase = structure.Id.ToLower();
+
+                // Lung
+                // V20Gy
+                if (str_lowercase.IndexOf("lung") >= 0)
+                {
+                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth);
+                    double dose_index = 20.0 * scaling_dose_unit;
+                    double v_20 = plan.VolumeAtDose(dvhData, dose_index);
+                    if(v_20 < 30.0)
+                    {
+                        oText += "(" + structure.Id + ") V20Gy:" + string.Format("{0:f2}", v_20) + " %" + "\n";
+                    }
+                    else
+                    {
+                        oText += "WARNING!! (" + structure.Id + ") V20Gy:" + string.Format("{0:f2}", v_20) + " % (QUANTEC: < 30.0)" + "\n";
+                    }
+                }
+
+                // Brainstem
+                // D1cc
+                if (str_lowercase.IndexOf("brain") >= 0 && structure.Id.IndexOf("stem") >= 0)
+                {
+                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.AbsoluteCm3, binWidth);
+                    DoseValue d_1cc = plan.DoseAtVolume(dvhData, 1.0);
+                    if(d_1cc < 59.0)
+                    {
+                        oText += "(" + structure.Id + ") D1cc:" + string.Format("{0:f2}", d_1cc.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
+                    }
+                    else
+                    {
+                        oText += "WARNING!! (" + structure.Id + ") D1cc:" + string.Format("{0:f2}", d_1cc.Dose) + " " + plan.TotalDose.UnitAsString + " (QUANTEC: < 59.0)\n";
+                    }
+                }
+            } 
 
             return oText;
 
