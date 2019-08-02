@@ -533,13 +533,6 @@ namespace VMS.TPS
             // Check DVH parameters
             //
 
-            // scaling factor: Gy to cGy
-            double scaling_dose_unit = 100.0;
-            if (plan.TotalDose.UnitAsString == "Gy")
-            {
-                scaling_dose_unit = 1.0;
-            }
-
             // Bin width of DVH curves
             double binWidth = 0.001;
 
@@ -551,8 +544,7 @@ namespace VMS.TPS
                 if (structure.Id.IndexOf("CTV") >= 0 && structure.DicomType == "CTV")
                 {
                     // D98%
-                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth);
-                    DoseValue d_98 = plan.DoseAtVolume(dvhData, 98.0);
+                    DoseValue d_98 = plan.GetDoseAtVolume(structure, 98.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
                     oText += "(" + structure.Id + ") D98%:" + string.Format("{0:f2}", d_98.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
                 }
 
@@ -561,12 +553,12 @@ namespace VMS.TPS
                 {
                     
                     // D95%
-                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth);
-                    DoseValue d_95 = plan.DoseAtVolume(dvhData, 95.0);
+                    DoseValue d_95 = plan.GetDoseAtVolume(structure, 95.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
                     oText += "(" + structure.Id + ") D95%:" + string.Format("{0:f2}", d_95.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
 
                     // HI 
                     // Dmax/Dmin
+                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth);
                     double maxDose = dvhData.MaxDose.Dose;
                     double minDose = dvhData.MinDose.Dose;
                     double homogeneityIndex = maxDose/minDose;
@@ -575,9 +567,9 @@ namespace VMS.TPS
 
                     // HI 
                     // (D2% - D98%) / D50% 
-                    DoseValue d_2 = plan.DoseAtVolume(dvhData, 2.0);
-                    DoseValue d_98 = plan.DoseAtVolume(dvhData, 98.0);
-                    DoseValue d_50 = plan.DoseAtVolume(dvhData, 50.0);
+                    DoseValue d_2 = plan.GetDoseAtVolume(structure, 2.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
+                    DoseValue d_98 = plan.GetDoseAtVolume(structure, 98.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
+                    DoseValue d_50 = plan.GetDoseAtVolume(structure, 50.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
                     double homogeneityIndex_ICRU83 = (d_2.Dose - d_98.Dose)/d_50.Dose;
                     oText += "(" + structure.Id + ") Homogeneity Index(ICRU 83):" + string.Format("{0:f2}", homogeneityIndex_ICRU83) + "\n";
 
@@ -595,9 +587,8 @@ namespace VMS.TPS
                 // V20Gy
                 if (str_lowercase.IndexOf("lung") >= 0)
                 {
-                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth);
-                    double dose_index = 20.0 * scaling_dose_unit;
-                    double v_20 = plan.VolumeAtDose(dvhData, dose_index);
+                    DoseValue dose_index = new DoseValue(2000.0, "cGy");
+                    double v_20 = plan.GetVolumeAtDose(structure, dose_index, VolumePresentation.Relative);
                     if(v_20 < 30.0)
                     {
                         oText += "(" + structure.Id + ") V20Gy:" + string.Format("{0:f2}", v_20) + " %" + "\n";
@@ -612,8 +603,7 @@ namespace VMS.TPS
                 // D1cc
                 if (str_lowercase.IndexOf("brain") >= 0 && structure.Id.IndexOf("stem") >= 0)
                 {
-                    DVHData dvhData = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.AbsoluteCm3, binWidth);
-                    DoseValue d_1cc = plan.DoseAtVolume(dvhData, 1.0);
+                    DoseValue d_1cc = plan.GetDoseAtVolume(structure, 1.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
                     if(d_1cc < 59.0)
                     {
                         oText += "(" + structure.Id + ") D1cc:" + string.Format("{0:f2}", d_1cc.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
