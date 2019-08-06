@@ -25,7 +25,7 @@ namespace VMS.TPS
         {
             // TODO : Add here the code that is called when the script is launched from Eclipse.
             
-            //Retrieve PlanSetup class
+            //Retrieve PlanSetup class 
             PlanSetup plan = context.PlanSetup;
             if (plan == null)
             {
@@ -64,7 +64,7 @@ namespace VMS.TPS
 
             messageText += "\n";
             // Plan check routine.
-            messageText += "<<PLAN CHECK " + new String(paddingChar, paddingLength) + "\n";
+            messageText += "<<PLAN CHECK " + new String(paddingChar, paddingLength) + "\n"; 
             messageText += CheckPlanFunc(plan);
 
             messageText += "\n";
@@ -204,7 +204,7 @@ namespace VMS.TPS
             DateTime newestImgDate = cImgDateTime;
             foreach(var study in plan.Course.Patient.Studies)
             {
-                // Exclude QA(phantom) images
+                // Exclude QA(phantom) images 
                 if(study.Comment != "ARIA RadOnc Study")
                 {
                     foreach(var series in study.Series)
@@ -392,7 +392,69 @@ namespace VMS.TPS
                 //If false, add the paramters and text[X] to the string 
                 oText += MakeFormatText(false, checkName, invalidMU);
             }
-            return oText;
+
+
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check Jaw/MLC Position 
+            checkName = "check Jaw/MLC position";
+
+            bool checkJawMLC = true;
+            var checkJawMLCText = "\n";
+
+            double distJawMLCX = 0.0; // Jawともっとも開いているMLCの規定距離
+
+            foreach (var beam in plan.Beams)
+            {
+                // MLCあり、かつStaticの場合のみ評価
+                if (beam.MLC != null && beam.MLCPlanType == 0)
+                {
+                    var jawPositions = beam.ControlPoints.ElementAt(0).JawPositions;
+                    var MLCPositions = beam.ControlPoints.ElementAt(0).LeafPositions;
+                    var leafPairs = MLCPositions.GetLength(1); // Leaf対の数
+
+                    float minX = 200;
+                    float maxX = -200;
+
+                    for (int i = 0; i < leafPairs; i++)
+                    {
+                        if (MLCPositions[0, i] != MLCPositions[1, i])
+                        {
+                            minX = (minX > MLCPositions[0, i]) ? MLCPositions[0, i] : minX;
+                            maxX = (maxX < MLCPositions[1, i]) ? MLCPositions[1, i] : maxX;
+                        }
+                    }
+
+                    var jawIdealX1 = minX - distJawMLCX;
+                    var jawIdealX2 = maxX + distJawMLCX;
+
+                    if (Math.Abs(jawIdealX1 - jawPositions.X1) > 1.0)
+                    {
+                        checkJawMLCText += string.Format("{0} : X1 jaw should be {1:f1} cm\n", beam.Id, jawIdealX1/10);
+                        checkJawMLC = false;
+                    }
+
+                    if (Math.Abs(jawIdealX2 - jawPositions.X2) > 1.0)
+                    {
+                        checkJawMLCText += string.Format("{0} : X2 jaw should be {1:f1} cm\n", beam.Id, jawIdealX2/10);
+                        checkJawMLC = false;
+                    }
+
+                }
+
+                if (checkJawMLC)
+                {
+                    oText += MakeFormatText(true, checkName, "");
+                }
+                else
+                {
+                    oText += MakeFormatText(false, checkName, checkJawMLCText);
+                }
+
+            }
+
+
+
+                return oText;
         }
         /// <summary>
         /// checkRPFunc
@@ -417,7 +479,7 @@ namespace VMS.TPS
             else
             {
                 //If false, add the paramters and text[X] to the string 
-                oText += MakeFormatText(false, checkName, "primary ref. point ID:"+plan.PrimaryReferencePoint.Id+",plan ID:"+plan.Id);
+                oText += MakeFormatText(false, checkName, "primary ref. point ID:"+plan.PrimaryReferencePoint.Id+", plan ID:"+plan.Id);
             }
 
             ////////////////////////////////////////////////////////////////////////////////
@@ -445,13 +507,18 @@ namespace VMS.TPS
                             foreach (var point in contour)
                             {
                                 var dist = VVector.Distance(refPointLocation, point);
-                                if (minDist > dist)
-                                {
-                                    minDist = dist;
-                                }
+                                minDist = (minDist > dist) ? dist : minDist;
                             }
                         }
                     }
+                }
+                if (minDist > 5.0)
+                {
+                    oText += MakeFormatText(true, checkName, "");
+                }
+                else
+                {
+                    oText += MakeFormatText(false, checkName, string.Format("Distance between ref. point and Body is {0:f1} mm", minDist));
                 }
 
             }
