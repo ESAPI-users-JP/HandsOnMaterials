@@ -401,7 +401,7 @@ namespace VMS.TPS
             bool checkJawMLC = true;
             var checkJawMLCText = "\n";
 
-            double distJawMLCX = 0.0; // Jawともっとも開いているMLCの規定距離
+            double distJawMLCX = 0.0; // Jawともっとも開いているMLCとの規定距離(X方向)
 
             foreach (var beam in plan.Beams)
             {
@@ -409,24 +409,27 @@ namespace VMS.TPS
                 if (beam.MLC != null && beam.MLCPlanType == 0)
                 {
                     var jawPositions = beam.ControlPoints.ElementAt(0).JawPositions;
-                    var MLCPositions = beam.ControlPoints.ElementAt(0).LeafPositions;
-                    var leafPairs = MLCPositions.GetLength(1); // Leaf対の数
+                    var leafPositions = beam.ControlPoints.ElementAt(0).LeafPositions;
+                    var leafPairs = leafPositions.GetLength(1); // Leaf対の数
 
                     float minX = 200;
                     float maxX = -200;
 
                     for (int i = 0; i < leafPairs; i++)
                     {
-                        if (MLCPositions[0, i] != MLCPositions[1, i])
+                        if (leafPositions[0, i] != leafPositions[1, i])
                         {
-                            minX = (minX > MLCPositions[0, i]) ? MLCPositions[0, i] : minX;
-                            maxX = (maxX < MLCPositions[1, i]) ? MLCPositions[1, i] : maxX;
+                            minX = (minX > leafPositions[0, i]) ? leafPositions[0, i] : minX;
+                            maxX = (maxX < leafPositions[1, i]) ? leafPositions[1, i] : maxX;
                         }
                     }
 
+                    // X Jawの規定位置
                     var jawIdealX1 = minX - distJawMLCX;
                     var jawIdealX2 = maxX + distJawMLCX;
 
+
+                    // 規定位置と1㎜以上ずれている場合にエラーを出す
                     if (Math.Abs(jawIdealX1 - jawPositions.X1) > 1.0)
                     {
                         checkJawMLCText += string.Format("{0} : X1 jaw should be {1:f1} cm\n", beam.Id, jawIdealX1/10);
@@ -486,6 +489,8 @@ namespace VMS.TPS
             // Reference Point と体表面の距離を算出
             checkName = "distance between BODY and Primary Ref. Point";
 
+            double tolDist = 5.0;  // ReferencePointと体表面距離の許容値 (mm)
+
             // Reference Point座標の取得
             if (plan.PrimaryReferencePoint.HasLocation(plan))
             {
@@ -512,7 +517,7 @@ namespace VMS.TPS
                         }
                     }
                 }
-                if (minDist > 5.0)
+                if (minDist > tolDist)
                 {
                     oText += MakeFormatText(true, checkName, "");
                 }
@@ -529,10 +534,6 @@ namespace VMS.TPS
 
 
 
-
-
-
-
             return oText;
         }
         /// <summary>
@@ -543,8 +544,40 @@ namespace VMS.TPS
         static string CheckStructureFunc(PlanSetup plan)
         {
             string oText = "";
+            string checkName = "";
 
-            // TODO : Add here the code 
+            var ss = plan.StructureSet;
+
+            ////////////////////////////////////////////////////////////////////////////////
+            // 輪郭の命名規則のチェック
+            // Volume TypeがPTVの場合に輪郭名がPTVから始まっているかチェック
+            checkName = "structure ID check";
+            string checkStructureText = "\n";
+            bool checkStructureId = true;
+
+            foreach (var s in ss.Structures)
+            {
+                if (s.DicomType == "PTV")
+                {
+                    if (!s.Id.StartsWith("PTV"))
+                    {
+                        checkStructureText += string.Format("{0} should start with PTV\n", s.Id);
+                        checkStructureId = false;
+                    }
+                }
+            }
+
+            if (checkStructureId)
+            {
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                oText += MakeFormatText(false, checkName, checkStructureText);
+            }
+
+            
+
 
             return oText;
 
