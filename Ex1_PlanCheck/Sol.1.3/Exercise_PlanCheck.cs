@@ -485,6 +485,33 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, invalidMU);
             }
 
+            ///////////////////////
+            //Check Dose Rate
+            checkName = "check Dose Rate";
+            int defDoserate = 600;
+            bool DRvalidFlag = true;
+            string invalidDR = "";
+            foreach (var beam in plan.Beams)
+            {
+                if (!beam.IsSetupField)
+                {
+                    if (beam.DoseRate != defDoserate)
+                    {
+                        DRvalidFlag = false;
+                        invalidDR += "(" + beam.Id + ":" + string.Format("{0}", beam.DoseRate) + ")";
+                    }
+                }
+            }
+            if (DRvalidFlag == true)
+            {
+                // If true, add text[O] to the string 
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                //If false, add the paramters and text[X] to the string 
+                oText += MakeFormatText(false, checkName, invalidDR);
+            }
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check Jaw/MLC Position 
@@ -624,7 +651,37 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, "Primary Reference Point has no location.");
             }
 
-
+            ////////////////////////////////////////////////////////////////////////////////
+            // Check primary reference point Dose limit
+            checkName = "check Total Dose Limit";
+            if (plan.PrimaryReferencePoint.TotalDoseLimit == plan.TotalDose)
+            {
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                oText += MakeFormatText(false, checkName, "Total Dose Limit:" + plan.PrimaryReferencePoint.TotalDoseLimit + ",Planed Dose:" + plan.TotalDose);
+            }
+            //Check Session Dose Limit
+            checkName = "check Session Dose Limit";
+            if (plan.PrimaryReferencePoint.SessionDoseLimit == plan.DosePerFraction)
+            {
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                oText += MakeFormatText(false, checkName, " Session Dose Limit:" + plan.PrimaryReferencePoint.SessionDoseLimit + ",Planed Dose:" + plan.DosePerFraction);
+            }
+            //Check Daily Dose Limit
+            checkName = "check Daily Dose Limit";
+            if (plan.PrimaryReferencePoint.DailyDoseLimit == plan.DosePerFraction)
+            {
+                oText += MakeFormatText(true, checkName, "");
+            }
+            else
+            {
+                oText += MakeFormatText(false, checkName, " Session:" + plan.PrimaryReferencePoint.SessionDoseLimit + "is differ form Daily:" + plan.PrimaryReferencePoint.DailyDoseLimit);
+            }
 
             return oText;
         }
@@ -668,8 +725,30 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, checkStructureText);
             }
 
-            
+            /////////////////////////////////
+            //Check HU Assigned Structure
 
+            checkName = "HU Assigned Structure check";
+            bool AssignedFlag = false;
+            string HUAssigned = "";
+            foreach (Structure st in plan.StructureSet.Structures)
+            {
+                double AssignedHU = 0;
+                bool isAssigned = st.GetAssignedHU(out AssignedHU);
+                if (isAssigned)
+                {
+                    AssignedFlag = true;
+                    HUAssigned += " (" + st.Id + ":" + string.Format("{0}", AssignedHU) + "HU" + ")";
+                }
+            }
+            if (AssignedFlag == false)
+            {
+                oText += "No Structure HU Overridden";
+            }
+            else
+            {
+                oText += MakeFormatText(false, checkName, HUAssigned);
+            }
 
             return oText;
 
