@@ -3,9 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck", "Sol.1.3\Exercise_PlanCheck.csproj", "{458015B4-8FE8-4D58-84BD-06F728785266}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck_Sol1.3", "Sol.1.3\Exercise_PlanCheck_Sol1.3.csproj", "{458015B4-8FE8-4D58-84BD-06F728785266}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck_Ex1.1", "Ex.1.1\Exercise_PlanCheck_Ex1.1.csproj", "{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck_Sol1.1", "Sol.1.1\Exercise_PlanCheck_Sol1.1.csproj", "{467D988C-9B94-4A74-AAD4-62C4B7D353C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck_Ex1.2", "Ex.1.2\Exercise_PlanCheck_Ex1.2.csproj", "{CF4ACD3A-A271-4172-AFEE-3E7BAAE9C8DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck_Sol1.2", "Sol.1.2\Exercise_PlanCheck_Sol1.2.csproj", "{3793888B-7546-4082-81DD-193D4F961CBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck_Ex1.3", "Ex.1.3\Exercise_PlanCheck_Ex1.3.csproj", "{89E93B0F-BB9E-4B11-9F2C-2AF4BB4343C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +29,22 @@ Global
 		{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}.Debug|x64.Build.0 = Debug|x64
 		{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}.Release|x64.ActiveCfg = Release|x64
 		{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}.Release|x64.Build.0 = Release|x64
+		{467D988C-9B94-4A74-AAD4-62C4B7D353C7}.Debug|x64.ActiveCfg = Debug|x64
+		{467D988C-9B94-4A74-AAD4-62C4B7D353C7}.Debug|x64.Build.0 = Debug|x64
+		{467D988C-9B94-4A74-AAD4-62C4B7D353C7}.Release|x64.ActiveCfg = Release|x64
+		{467D988C-9B94-4A74-AAD4-62C4B7D353C7}.Release|x64.Build.0 = Release|x64
+		{CF4ACD3A-A271-4172-AFEE-3E7BAAE9C8DE}.Debug|x64.ActiveCfg = Debug|x64
+		{CF4ACD3A-A271-4172-AFEE-3E7BAAE9C8DE}.Debug|x64.Build.0 = Debug|x64
+		{CF4ACD3A-A271-4172-AFEE-3E7BAAE9C8DE}.Release|x64.ActiveCfg = Release|x64
+		{CF4ACD3A-A271-4172-AFEE-3E7BAAE9C8DE}.Release|x64.Build.0 = Release|x64
+		{3793888B-7546-4082-81DD-193D4F961CBD}.Debug|x64.ActiveCfg = Debug|x64
+		{3793888B-7546-4082-81DD-193D4F961CBD}.Debug|x64.Build.0 = Debug|x64
+		{3793888B-7546-4082-81DD-193D4F961CBD}.Release|x64.ActiveCfg = Release|x64
+		{3793888B-7546-4082-81DD-193D4F961CBD}.Release|x64.Build.0 = Release|x64
+		{89E93B0F-BB9E-4B11-9F2C-2AF4BB4343C5}.Debug|x64.ActiveCfg = Debug|x64
+		{89E93B0F-BB9E-4B11-9F2C-2AF4BB4343C5}.Debug|x64.Build.0 = Debug|x64
+		{89E93B0F-BB9E-4B11-9F2C-2AF4BB4343C5}.Release|x64.ActiveCfg = Release|x64
+		{89E93B0F-BB9E-4B11-9F2C-2AF4BB4343C5}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

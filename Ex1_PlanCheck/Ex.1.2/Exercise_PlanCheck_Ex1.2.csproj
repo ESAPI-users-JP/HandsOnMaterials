@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProjectGuid>{458015B4-8FE8-4D58-84BD-06F728785266}</ProjectGuid>
+    <ProjectGuid>{CF4ACD3A-A271-4172-AFEE-3E7BAAE9C8DE}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Exercise_PlanCheck</RootNamespace>
@@ -55,7 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exercise_PlanCheck.cs" />
+    <Compile Include="Exercise_PlanCheck_Ex1.2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
