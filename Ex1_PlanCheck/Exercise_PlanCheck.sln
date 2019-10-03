@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.102
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Excercise_PlanCheck", "Exercise_PlanCheck.csproj", "{458015B4-8FE8-4D58-84BD-06F728785266}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck", "Sol.1.3\Exercise_PlanCheck.csproj", "{458015B4-8FE8-4D58-84BD-06F728785266}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exercise_PlanCheck_Ex1.1", "Ex.1.1\Exercise_PlanCheck_Ex1.1.csproj", "{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{458015B4-8FE8-4D58-84BD-06F728785266}.Debug|x64.Build.0 = Debug|x64
 		{458015B4-8FE8-4D58-84BD-06F728785266}.Release|x64.ActiveCfg = Release|x64
 		{458015B4-8FE8-4D58-84BD-06F728785266}.Release|x64.Build.0 = Release|x64
+		{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}.Debug|x64.ActiveCfg = Debug|x64
+		{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}.Debug|x64.Build.0 = Debug|x64
+		{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}.Release|x64.ActiveCfg = Release|x64
+		{F1DAE03F-AE17-4759-AFBE-57975FE9A95E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
