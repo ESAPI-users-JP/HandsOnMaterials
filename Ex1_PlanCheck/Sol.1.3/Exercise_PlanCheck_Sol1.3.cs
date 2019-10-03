@@ -299,7 +299,6 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, plan.Id);
             }
 
-            // Sugimoto
             ////////////////////////////////////////////////////////////////////////////////
             // Check plan normalization method.
             checkName = "Plan normalization method";
@@ -338,19 +337,15 @@ namespace VMS.TPS
 
             // Calculation model names
             string AAA = "AAA";
-            string AcurosXB = "AEB";
+            string AcurosXB = "AXB";
             // Commissioned calculation models(+version)
-            string AAA_version = AAA + "_15.6.03";        
-            string AcurosXB_version = AcurosXB + "_15.6.03";
+            string AAA_version = AAA + "_15.6";        
+            string AcurosXB_version = AcurosXB + "_15.6";
 
             //Check calculation models
             checkName = "Photon calculation model";
             string photonCalculationModel = plan.PhotonCalculationModel;
-            if (photonCalculationModel != AAA_version)
-            {
-                oText += MakeFormatText(false, checkName, photonCalculationModel);
-            }
-            else if (photonCalculationModel != AcurosXB_version) 
+            if (photonCalculationModel != AAA_version && photonCalculationModel != AcurosXB_version)
             {
                 oText += MakeFormatText(false, checkName, photonCalculationModel);
             }
@@ -522,13 +517,14 @@ namespace VMS.TPS
             // Check Jaw/MLC Position 
             checkName = "Check Jaw/MLC position";
 
-            bool checkJawMLC = true;
             var checkJawMLCText = "\n";
 
             double distJawMLCX = 0.0; // Jawともっとも開いているMLCとの規定距離(X方向)
 
             foreach (var beam in plan.Beams)
             {
+                bool checkJawMLC = true;
+
                 // MLCあり、かつStaticの場合のみ評価
                 if (beam.MLC != null && beam.MLCPlanType == 0)
                 {
@@ -553,16 +549,16 @@ namespace VMS.TPS
                     var jawIdealX2 = maxX + distJawMLCX;
 
 
-                    // 規定位置と1㎜以上ずれている場合にエラーを出す
-                    if (Math.Abs(jawIdealX1 - jawPositions.X1) > 1.0)
+                    // 規定位置と2㎜以上ずれている場合にエラーを出す
+                    if (Math.Abs(jawIdealX1 - jawPositions.X1) > 2.0)
                     {
-                        checkJawMLCText += string.Format("{0} : X1 jaw should be {1:f1} cm\n", beam.Id, jawIdealX1/10);
+                        checkJawMLCText += string.Format("{0} : X1 jaw should be {1:f1} cm", beam.Id, jawIdealX1/10);
                         checkJawMLC = false;
                     }
 
-                    if (Math.Abs(jawIdealX2 - jawPositions.X2) > 1.0)
+                    if (Math.Abs(jawIdealX2 - jawPositions.X2) > 2.0)
                     {
-                        checkJawMLCText += string.Format("{0} : X2 jaw should be {1:f1} cm\n", beam.Id, jawIdealX2/10);
+                        checkJawMLCText += string.Format("{0} : X2 jaw should be {1:f1} cm", beam.Id, jawIdealX2/10);
                         checkJawMLC = false;
                     }
 
@@ -570,7 +566,7 @@ namespace VMS.TPS
 
                 if (checkJawMLC)
                 {
-                    oText += MakeFormatText(true, checkName, "");
+                    oText += MakeFormatText(true, checkName + "(" + beam.Id + ")", "");
                 }
                 else
                 {
@@ -735,8 +731,6 @@ namespace VMS.TPS
                                 minDist = (minDist > dist) ? dist : minDist;
                             }
                         }
-
-
                     }
                 }
                 if (minDist > tolDist)
@@ -844,14 +838,14 @@ namespace VMS.TPS
 
 
             string HUAssigned = "";
-            foreach (Structure st in plan.StructureSet.Structures)
+            foreach (Structure st in ss.Structures)
             {
                 double AssignedHU = 0;
                 bool isAssigned = st.GetAssignedHU(out AssignedHU);
                 if (isAssigned)
                 {
                     AssignedFlag = true;
-                    HUAssigned += " (" + st.Id + ":" + string.Format("{0}", AssignedHU) + "HU" + ")";
+                    HUAssigned += " (" + st.Id + ": " + string.Format("{0:f1}", AssignedHU) + "HU" + ")";
                 }
             }
             if (AssignedFlag == false)
@@ -905,6 +899,10 @@ namespace VMS.TPS
                     // D95%
                     DoseValue d_95 = plan.GetDoseAtVolume(structure, 95.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
                     oText += "(" + structure.Id + ") D95%:" + string.Format("{0:f2}", d_95.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
+                    
+                    // Dmean
+                    DoseValue d_mean = plan.GetDVHCumulativeData(structure, DoseValuePresentation.Absolute, VolumePresentation.Relative, binWidth).MeanDose;
+                    oText += "(" + structure.Id + ") Dmean:" + string.Format("{0:f2}", d_mean.Dose) + " " + plan.TotalDose.UnitAsString + "\n";
 
                     // HI 
                     // Dmax/Dmin
@@ -951,7 +949,7 @@ namespace VMS.TPS
 
                 // Brainstem
                 // D1cc
-                if (str_lowercase.IndexOf("brain") >= 0 && structure.Id.IndexOf("stem") >= 0)
+                if (str_lowercase.IndexOf("brain") >= 0 && str_lowercase.IndexOf("stem") >= 0)
                 {
                     DoseValue d_1cc = plan.GetDoseAtVolume(structure, 1.0, VolumePresentation.Relative, DoseValuePresentation.Absolute);
                     if(d_1cc.Dose < 59.0)
@@ -987,6 +985,8 @@ namespace VMS.TPS
             oText += string.Format("Approval status:{0}, Approval date ID:{1}\n", plan.ApprovalStatus.ToString(), plan.PlanningApprovalDate);
             return oText;
         }
+
+
 
         public static string CheckIsocenterHu(PlanSetup planSetup, double HuLowerThreshold, double HuUpperThreshold)
         {
@@ -1364,10 +1364,12 @@ namespace VMS.TPS
             InputBoxTitle = inputBoxTitle;
             DefaultInputBoxValue = defaultInputBoxValue;
 
-            Window = new Window();
-            Window.SizeToContent = SizeToContent.WidthAndHeight;
-            Window.Title = WindowTitle;
-            Window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            Window = new Window
+            {
+                SizeToContent = SizeToContent.WidthAndHeight,
+                Title = WindowTitle,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
 
             var InputBoxLabel = new Label();
             InputBoxLabel.Content = InputBoxTitle;
@@ -1386,16 +1388,22 @@ namespace VMS.TPS
             //ComboBox.ItemsSource = new List<string> { "PTV", "CTV" };
             //ComboBox.MinWidth = 120;
 
-            var OkButton = new Button();
-            OkButton.Content = "OK";
-            OkButton.Margin = new Thickness(3);
-            OkButton.Width = 72;
+            var OkButton = new Button
+            {
+                Content = "OK",
+                Margin = new Thickness(3),
+                Width = 72
+            };
+
             OkButton.Click += OkButton_Click;
 
-            var CancelButton = new Button();
-            CancelButton.Content = "Cancel";
-            CancelButton.Margin = new Thickness(3);
-            CancelButton.Width = 72;
+            var CancelButton = new Button
+            {
+                Content = "Cancel",
+                Margin = new Thickness(3),
+                Width = 72
+            };
+
             CancelButton.Click += CancelButton_Click;
 
             var stackPanelForButtons = new StackPanel();
