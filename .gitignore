@@ -329,3 +329,9 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# for virtual environments
+.venv/
+
+# for mkdocs
+docs/site/

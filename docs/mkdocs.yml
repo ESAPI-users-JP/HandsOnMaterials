@@ -1,0 +1,52 @@
+site_name: ESAPIハンズオンセミナー2020 
+site_author: ESAPIユーザー会 (ESAPI-users-JP)
+copyright: "Copyright &copy 2019-2020 ESAPI-users-JP"
+nav:
+  - はじめに: index.md
+  - 1. Hello World in ESAPI:
+    - 1.1. ScriptWizardによるスクリプトの生成: 1_HelloWorld/1_1.md
+
+theme:
+  name: 'material'
+  font:
+    text: 'Noto Sans JP'
+    code: 'Roboto Mono'
+  language: 'ja'
+  palette:
+    primary: 'light blue'
+    accent: 'light blue'
+extra:
+  search:
+    language: 'ja'
+markdown_extensions:
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - mdx_math:
+      enable_dollar_delimiter: true
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: true
+  - toc:
+      permalink: true
+extra_javascript:
+  - 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'
+  - 'js/extra.js'
+  - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'
+extra_css:
+  - 'css/extra.css'
