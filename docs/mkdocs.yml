@@ -39,6 +39,9 @@ nav:
   - 9. 線量情報のチェック:
     - 9.1. ターゲットDVH情報のチェック: 9_CheckDose/9_1.md
     - 9.2. リスク臓器DVH情報のチェック: 9_CheckDose/9_2.md
+  - 10. データマイニング:
+    - 10.1. StandAloneアプリケーションの作成: 10_DataMining/10_1.md
+    - 10.2. マイニング内容の決定: 10_DataMining/10_2.md
 
 theme:
   name: 'material'
