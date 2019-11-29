@@ -120,7 +120,7 @@ namespace VMS.TPS
             }
             else
             {
-                //If false, add the paramters and text[X] to the string 
+                //If false, add the parameters and text[X] to the string 
                 //oText = checkName + ": X \n";
                 oText = checkName + ": (" + paraText + ") X \n";
             }
@@ -142,10 +142,15 @@ namespace VMS.TPS
             ////////////////////////////////////////////////////////////////////////////////
             // Check course ID 
             checkName = "Course ID";
+            
+            //Retrieve Course class
+            var course = plan.Course;
+            var courseId = course.Id;
+
             //Set regular expression
             string expressionC = "^C[0-9]{1,2}$";
             Regex regC = new Regex(expressionC);
-            Match resultC = regC.Match(plan.Course.Id);
+            Match resultC = regC.Match(courseId);
 
             if (resultC.Success == true)
             {
@@ -154,17 +159,21 @@ namespace VMS.TPS
             }
             else
             {
-                //If false, add the paramters and text[X] to the string 
-                oText += MakeFormatText(false, checkName, plan.Course.Id);
+                //If false, add the parameters and text[X] to the string 
+                oText += MakeFormatText(false, checkName, courseId);
             }
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check plan ID 
             checkName = "Plan ID";
+
+            //Retreive plan Id
+            var planId = plan.Id
+
             //Set regular expression
             string expressionP = "^[0-9]{1,2}-[0-9]{1,2}$";
             Regex regP = new Regex(expressionP);
-            Match resultP = regP.Match(plan.Id);
+            Match resultP = regP.Match(planId);
 
             if (resultP.Success == true)
             {
@@ -173,8 +182,8 @@ namespace VMS.TPS
             }
             else
             {
-                //If false, add the paramters and text[X] to the string 
-                oText += MakeFormatText(false, checkName, plan.Id);
+                //If false, add the parameters and text[X] to the string 
+                oText += MakeFormatText(false, checkName, planId);
             }
 
             ////////////////////////////////////////////////////////////////////////////////
@@ -194,7 +203,7 @@ namespace VMS.TPS
                 if ((((n_method.IndexOf("95.00% of") >= 0) || (n_method.IndexOf("50.00% of") >= 0))
                     && (n_method.IndexOf("100.00% covers") >= 0)) == false)
                 {
-                    //If false, add the paramters and text[X] to the string 
+                    //If false, add the parameters and text[X] to the string 
                     oText += MakeFormatText(false, checkName, n_method);
                 }
                 else // D95% or D50% 
@@ -205,7 +214,7 @@ namespace VMS.TPS
             }
             else // other method (No plan normalization or Plan Normalization Value)
             {
-                //If false, add the paramters and text[X] to the string 
+                //If false, add the parameters and text[X] to the string 
                 oText += MakeFormatText(false, checkName, n_method);
             }
 
@@ -291,7 +300,7 @@ namespace VMS.TPS
                         //If false
                         //flag -> false 
                         machineChkFlag = false;
-                        //add the paramters to the string 
+                        //add the parameters to the string 
                         oText += MakeFormatText(false, checkName, beam.Id + ": " + beam.TreatmentUnit.Id + " -> " + machine);
                     }
                 }
@@ -328,7 +337,7 @@ namespace VMS.TPS
             }
             else
             {
-                //If false, add the paramters and text[X] to the string 
+                //If false, add the parameters and text[X] to the string 
                 oText += MakeFormatText(false, checkName, "multiple isocenter");
             }
 
@@ -359,7 +368,7 @@ namespace VMS.TPS
             }
             else
             {
-                //If false, add the paramters and text[X] to the string 
+                //If false, add the parameters and text[X] to the string 
                 oText += MakeFormatText(false, checkName, invalidMU);
             }
 
@@ -387,7 +396,7 @@ namespace VMS.TPS
             }
             else
             {
-                //If false, add the paramters and text[X] to the string 
+                //If false, add the parameters and text[X] to the string 
                 oText += MakeFormatText(false, checkName, invalidDR);
             }
 

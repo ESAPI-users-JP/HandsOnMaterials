@@ -120,7 +120,7 @@ namespace VMS.TPS
             }
             else
             {
-                //If false, add the paramters and text[X] to the string 
+                //If false, add the parameters and text[X] to the string 
                 //oText = checkName + ": X \n";
                 oText = checkName + ": (" + paraText + ") X \n";
             }
