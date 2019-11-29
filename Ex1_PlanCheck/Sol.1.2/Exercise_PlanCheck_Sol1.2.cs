@@ -189,6 +189,7 @@ namespace VMS.TPS
             ////////////////////////////////////////////////////////////////////////////////
             // Check plan normalization method.
             checkName = "Plan normalization method";
+            
             string n_method = plan.PlanNormalizationMethod;
             //if ((n_method.IndexOf("No plan normalization") >= 0) ||
             //(n_method.IndexOf("Plan Normalization Value") >= 0))
