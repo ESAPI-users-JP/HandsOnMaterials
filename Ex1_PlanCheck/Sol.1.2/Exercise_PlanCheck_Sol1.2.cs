@@ -168,7 +168,7 @@ namespace VMS.TPS
             checkName = "Plan ID";
 
             //Retreive plan Id
-            var planId = plan.Id
+            var planId = plan.Id;
 
             //Set regular expression
             string expressionP = "^[0-9]{1,2}-[0-9]{1,2}$";

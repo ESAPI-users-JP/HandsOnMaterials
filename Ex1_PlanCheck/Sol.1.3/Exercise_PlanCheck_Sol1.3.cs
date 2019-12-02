@@ -208,7 +208,7 @@ namespace VMS.TPS
             checkName = "ImageDate";
             //Get open image creation date
             DateTime cImgDateTime = image.CreationDateTime.Value;
-            DateTime datetime = DateTime.Now;
+            DateTime datetime;
             DateTime newestImgDate = cImgDateTime;
             foreach (var study in plan.Course.Patient.Studies)
             {
