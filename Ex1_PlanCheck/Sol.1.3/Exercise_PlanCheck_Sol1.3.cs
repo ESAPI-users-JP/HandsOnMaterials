@@ -313,16 +313,16 @@ namespace VMS.TPS
             }
             else if (n_method.IndexOf("covers") >= 0)
             {
-                if ((((n_method.IndexOf("95.00% of") >= 0) || (n_method.IndexOf("50.00% of") >= 0))
-                    && (n_method.IndexOf("100.00% covers") >= 0)) == false)
-                {
-                    //If false, add the parameters and text[X] to the string 
-                    oText += MakeFormatText(false, checkName, n_method);
-                }
-                else // D95% or D50% 
+                if (((n_method.IndexOf("100.00% covers") >= 0)
+                 && ((n_method.IndexOf("95.00% of") >= 0) || (n_method.IndexOf("50.00% of") >= 0))) == true)
                 {
                     // If true, add text[O] to the string 
                     oText += MakeFormatText(true, checkName, "");
+                }
+                else
+                {
+                    //If false, add the parameters and text[X] to the string 
+                    oText += MakeFormatText(false, checkName, n_method);
                 }
             }
             else // other method (No plan normalization or Plan Normalization Value)
