@@ -152,26 +152,26 @@ namespace VMS.TPS
         {
             //Initializes the variables
             string oText = "";
-            string checkName = "";
+            //string checkName = "";
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check ImagingDeviceID
-            checkName = "Imaging Device ID";
+            //checkName = "Imaging Device ID";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check PatientOrientation
-            checkName = "PatientOrientation";
+            //checkName = "PatientOrientation";
 
 
             // Matching between ImagingOrientation and TreatmentOrientation
-            checkName = "MatchOrientation(Image-Plan)";
+            //checkName = "MatchOrientation(Image-Plan)";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check imaging date of CT images
             // CT images must be newest.
-            checkName = "ImageDate";
+            //checkName = "ImageDate";
 
 
             return oText;
@@ -518,27 +518,27 @@ namespace VMS.TPS
         static string CheckRPFunc(PlanSetup plan)
         {
             string oText = "";
-            string checkName = "";
+            //string checkName = "";
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check primary reference point ID
             // Primary reference point ID and plan ID must be the same
-            checkName = "Check primary ref. point ID";
+            //checkName = "Check primary ref. point ID";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Reference Point と体表面の距離を算出
-            checkName = "Distance between BODY and Primary Ref. Point";
+            //checkName = "Distance between BODY and Primary Ref. Point";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check primary reference point Dose limit
-            checkName = "Check Total Dose Limit";
+            //checkName = "Check Total Dose Limit";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check Isocenter HU
-            checkName = "Check Isocenter HU";
+            //checkName = "Check Isocenter HU";
 
 
             return oText;
@@ -554,24 +554,24 @@ namespace VMS.TPS
         static string CheckStructureFunc(PlanSetup plan)
         {
             string oText = "";
-            string checkName = "";
+            //string checkName = "";
 
             var ss = plan.StructureSet;
 
             ////////////////////////////////////////////////////////////////////////////////
             // 輪郭の命名規則のチェック
             // Volume TypeがPTVの場合に輪郭名がPTVから始まっているかチェック
-            checkName = "Check structure ID";
+            //checkName = "Check structure ID";
 
 
             /////////////////////////////////
             //Check HU Assigned Structure
-            checkName = "Check HU Assigned Structure";
+            //checkName = "Check HU Assigned Structure";
 
 
             /////////////////////////////////
             //Check Small segments
-            checkName = "Check Small Segments";
+            //checkName = "Check Small Segments";
 
 
             return oText;

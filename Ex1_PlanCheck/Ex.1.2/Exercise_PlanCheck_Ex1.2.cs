@@ -137,28 +137,27 @@ namespace VMS.TPS
         {
             //Initializes the variables
             string oText = "";
-            string checkName = "";
+            //string checkName = "";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check course ID 
-            checkName = "Course ID";
+            //checkName = "Course ID";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check plan ID 
-            checkName = "Plan ID";
+            //checkName = "Plan ID";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check plan normalization method.
-            checkName = "Plan normalization method";
+            //checkName = "Plan normalization method";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check calculation model.
-            //
-            checkName = "Photon calculation model";
+            //checkName = "Photon calculation model";
 
 
             return oText;
@@ -175,33 +174,32 @@ namespace VMS.TPS
         {
             //Initializes the variables
             string oText = "";
-            string checkName = "";
+            //string checkName = "";
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check Treatment Machine
-            //
-            checkName = "Check treatment machine";
+            //checkName = "Check treatment machine";
 
             
             ////////////////////////////////////////////////////////////////////////////////
             // Check isocenter
             // Plan isocenter must be single point
-            checkName = "Check single isocenter";
+            //checkName = "Check single isocenter";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check MU 
-            checkName = "Check MU";
+            //checkName = "Check MU";
 
 
             ///////////////////////
             //Check Dose Rate
-            checkName = "Check Dose Rate";
+            //checkName = "Check Dose Rate";
 
 
             ////////////////////////////////////////////////////////////////////////////////
             // Check Jaw/MLC Position 
-            checkName = "Check Jaw/MLC position";
+            //checkName = "Check Jaw/MLC position";
 
 
             return oText;
