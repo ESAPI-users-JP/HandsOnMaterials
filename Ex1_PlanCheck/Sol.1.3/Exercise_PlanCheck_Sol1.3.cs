@@ -771,13 +771,13 @@ namespace VMS.TPS
             }
             //Check Daily Dose Limit
             checkName = "Check Daily Dose Limit";
-            if (plan.PrimaryReferencePoint.DailyDoseLimit == plan.DosePerFraction)
+            if (plan.PrimaryReferencePoint.DailyDoseLimit == plan.PrimaryReferencePoint.SessionDoseLimit)
             {
                 oText += MakeFormatText(true, checkName, "");
             }
             else
             {
-                oText += MakeFormatText(false, checkName, " Session: " + plan.PrimaryReferencePoint.SessionDoseLimit + "is differ form Daily: " + plan.PrimaryReferencePoint.DailyDoseLimit);
+                oText += MakeFormatText(false, checkName, " Daily DoseLimit: " + plan.PrimaryReferencePoint.DailyDoseLimit + "is differ form Session Dose Limit: " + plan.PrimaryReferencePoint.SessionDoseLimit);
             }
 
 
@@ -836,7 +836,6 @@ namespace VMS.TPS
             checkName = "Check HU Assigned Structure";
             bool AssignedFlag = false;
 
-
             string HUAssigned = "";
             foreach (Structure st in ss.Structures)
             {
@@ -845,7 +844,7 @@ namespace VMS.TPS
                 if (isAssigned)
                 {
                     AssignedFlag = true;
-                    HUAssigned += " (" + st.Id + ": " + string.Format("{0:f1}", AssignedHU) + "HU" + ")";
+                    HUAssigned += " (" + st.Id + ": " + string.Format("{0}", AssignedHU) + "HU" + ")";
                 }
             }
             if (AssignedFlag == false)
