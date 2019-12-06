@@ -856,6 +856,8 @@ namespace VMS.TPS
                 oText += MakeFormatText(false, checkName, HUAssigned);
             }
 
+            oText = "\n";
+            
             /////////////////////////////////
             //Check Small segments
             oText += CheckSmallSegments(plan);
