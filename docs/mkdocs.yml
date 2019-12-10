@@ -72,6 +72,7 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tasklist:
       custom_checkbox: true
+  - attr_list
   - pymdownx.tilde
   - mdx_math:
       enable_dollar_delimiter: true
