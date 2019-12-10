@@ -104,7 +104,7 @@ namespace VMS.TPS
             var patientName = patient.LastName + " " + patient.FirstName;
             oText += string.Format("ID:{0}, Name:{1}\n", patientID, patientName);
             oText += string.Format("Course ID:{0}, Plan ID:{1}\n", plan.Course.Id, plan.Id);
-            oText += string.Format("Approval status:{0}, Approval date ID:{1}\n", plan.ApprovalStatus.ToString(), plan.PlanningApprovalDate);
+            oText += string.Format("Approval status:{0}, Approval date:{1}\n", plan.ApprovalStatus.ToString(), plan.PlanningApprovalDate);
 
             return oText;
         }
