@@ -3,7 +3,6 @@ site_author: ESAPIユーザー会 (ESAPI-users-JP)
 copyright: "Copyright &copy 2019-2020 ESAPI-users-JP"
 nav:
   - はじめに: index.md
-  - 記述方法サンプル: sample/Sample.md
   - 1. Hello World in ESAPI:
     - 1.1. ScriptWizardによるスクリプトの生成: 1_HelloWorld/1_1.md
     - 1.2. ESAPI Helpの活用: 1_HelloWorld/1_2.md
