@@ -37,8 +37,7 @@ nav:
     - 8.2. HU値オーバーライドのチェック: 8_CheckStructure/8_2.md
     - 8.3. 小体積輪郭のチェック: 8_CheckStructure/8_3.md
   - 9. 線量情報のチェック:
-    - 9.1. ターゲットDVH情報のチェック: 9_CheckDose/9_1.md
-    - 9.2. リスク臓器DVH情報のチェック: 9_CheckDose/9_2.md
+    - 9.1. ターゲットおよびリスク臓器のDVH情報のチェック: 9_CheckDose/9_1.md
 
 theme:
   name: 'material'
