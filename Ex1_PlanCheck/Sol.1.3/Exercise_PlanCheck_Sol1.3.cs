@@ -345,7 +345,7 @@ namespace VMS.TPS
             //Check calculation models
             checkName = "Photon calculation model";
             string photonCalculationModel = plan.PhotonCalculationModel;
-            if (photonCalculationModel != AAA_version && photonCalculationModel != AcurosXB_version)
+            if (photonCalculationModel != AAA_version || photonCalculationModel != AcurosXB_version)
             {
                 oText += MakeFormatText(false, checkName, photonCalculationModel);
             }
