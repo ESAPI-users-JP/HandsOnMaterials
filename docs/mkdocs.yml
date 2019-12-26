@@ -1,11 +1,11 @@
-site_name: ESAPIハンズオンセミナー2020 
+site_name: ESAPIハンズオンセミナー 
 site_author: ESAPIユーザー会 (ESAPI-users-JP)
 copyright: "Copyright &copy 2019-2020 ESAPI-users-JP"
 
 # Repository
 repo_name: 'ESAPI-users-JP/HandsOnMaterials'
 repo_url: 'https://github.com/ESAPI-users-JP/HandsOnMaterials/'
-edit_uri: 'edit/master/docs/docs'
+edit_uri: ''
 
 nav:
   - はじめに: index.md
@@ -16,8 +16,10 @@ nav:
     - 2.1. 目的を決めよう: 2_CodeDesign/2_1.md
     - 2.2. チェックしたい内容を決めよう: 2_CodeDesign/2_2.md
   - 3. 患者情報とプラン情報の取得:
+    - 3.0. 演習用ソースコードの確認: 3_GetPatient/3_0.md
     - 3.1. 患者情報の取得: 3_GetPatient/3_1.md
     - 3.2. プラン情報の取得: 3_GetPatient/3_2.md
+    - 3.3. StandAlone exeによるデータの確認: 3_GetPatient/3_3.md
   - 4. プラン情報のチェック:
     - 4.1. コースID/プランIDのチェック: 4_CheckPlan/4_1.md
     - 4.2. プランNormalizationのチェック: 4_CheckPlan/4_2.md
