@@ -999,6 +999,24 @@ namespace VMS.TPS
             var gridReses = new double[] { image.XRes, image.YRes, image.ZRes };
             var gridSizes = new int[] { image.XSize, image.YSize, image.ZSize };
 
+            //MessageBox.Show(string.Format("Image ID: {0}", image.Id));
+            //MessageBox.Show(string.Format("Origin (原点): ({0:0}, {1:0}, {2:0})", image.Origin.x, image.Origin.y, image.Origin.z));
+            //MessageBox.Show(string.Format("Resolution (グリッド幅): ({0:0}, {1:0}, {2:0})", image.XRes, image.YRes, image.ZRes));
+            //MessageBox.Show(string.Format("Size (グリッドサイズ): ({0:0}, {1:0}, {2:0})", image.XSize, image.YSize, image.ZSize));
+            //MessageBox.Show(string.Format("Isocenter: ({0:0}, {1:0}, {2:0})", isocenter.x, isocenter.y, isocenter.z));
+
+            //int k0 = (int)Math.Floor((isocenter.x - image.Origin.x) / image.XRes);
+            //int j0 = (int)Math.Floor((isocenter.y - image.Origin.y) / image.YRes);
+            //int i0 = (int)Math.Floor((isocenter.z - image.Origin.z) / image.ZRes);
+            //MessageBox.Show(string.Format("Isocenterのグリッド位置: ({0:0}, {1:0}, {2:0}", k0, j0, i0));
+
+            //var z0Image = new int[image.XSize, image.YSize];
+            //image.GetVoxels(i0, z0Image);
+            //var rawVoxelValue0 = z0Image[k0, j0];
+            //MessageBox.Show(string.Format("IsocenterのRaw Voxel値: ({0}", rawVoxelValue0));
+            //var huValue0 =image.VoxelToDisplayValue(rawVoxelValue0);
+            //MessageBox.Show(string.Format("IsocenterのHU値: ({0}", huValue0));
+
             // radius of the sphere ROI in mm
             double radius = 5;
 
