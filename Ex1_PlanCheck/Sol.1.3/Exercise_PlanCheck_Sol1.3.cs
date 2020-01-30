@@ -607,6 +607,17 @@ namespace VMS.TPS
                 double zIso = plan.Beams.First().IsocenterPosition.z;
                 var zRange = GetGridRange1d(radius, zIso, zOrigin, zSize, zRes);
 
+                //MessageBox.Show(string.Format("Image ID: {0}", image.Id));
+                //MessageBox.Show(string.Format("Origin (原点): ({0:0}, {1:0}, {2:0})", image.Origin.x, image.Origin.y, image.Origin.z));
+                //MessageBox.Show(string.Format("Resolution (グリッド幅): ({0:0}, {1:0}, {2:0})", image.XRes, image.YRes, image.ZRes));
+                //MessageBox.Show(string.Format("Size (グリッドサイズ): ({0:0}, {1:0}, {2:0})", image.XSize, image.YSize, image.ZSize));
+                //MessageBox.Show(string.Format("Isocenter: ({0:0}, {1:0}, {2:0})", xIso, yIso, zIso));
+
+                //int k0 = (int)Math.Floor((xIso - image.Origin.x) / image.XRes);
+                //int j0 = (int)Math.Floor((yIso - image.Origin.y) / image.YRes);
+                //int i0 = (int)Math.Floor((zIso - image.Origin.z) / image.ZRes);
+                //MessageBox.Show(string.Format("Isocenterのグリッド位置: ({0:0}, {1:0}, {2:0}", k0, j0, i0));
+
                 var zCollisions = new List<double>();
                 for (int i = zRange[0]; i <= zRange[1]; i++)
                 {
