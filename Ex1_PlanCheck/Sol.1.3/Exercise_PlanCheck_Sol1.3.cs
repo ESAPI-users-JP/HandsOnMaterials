@@ -605,7 +605,7 @@ namespace VMS.TPS
                 double xIso = plan.Beams.First().IsocenterPosition.x;
                 double yIso = plan.Beams.First().IsocenterPosition.y;
                 double zIso = plan.Beams.First().IsocenterPosition.z;
-                var zRange = GetGridRange1d(radius, zIso, zOrigin, zSize, zRes);
+                var zRange = GetGridRange1d(radius, zIso, zOrigin,zRes, zSize);
 
                 //MessageBox.Show(string.Format("Image ID: {0}", image.Id));
                 //MessageBox.Show(string.Format("Origin (原点): ({0:0}, {1:0}, {2:0})", image.Origin.x, image.Origin.y, image.Origin.z));
@@ -617,6 +617,12 @@ namespace VMS.TPS
                 //int j0 = (int)Math.Floor((yIso - image.Origin.y) / image.YRes);
                 //int i0 = (int)Math.Floor((zIso - image.Origin.z) / image.ZRes);
                 //MessageBox.Show(string.Format("Isocenterのグリッド位置: ({0:0}, {1:0}, {2:0}", k0, j0, i0));
+
+                //var iZmin0 = (int)Math.Floor(((zIso - radius) - zOrigin) / zRes);
+                //iZmin0 = (iZmin0 >= 0) ? iZmin0 : 0;
+                //var iZmax0 = (int)Math.Ceiling(((zIso + radius) - zOrigin) / zRes);
+                //iZmax0 = (iZmax0 < zSize) ? iZmax0 : zSize - 1;
+                //MessageBox.Show(string.Format("調べるスライスの範囲: {0:0}–{1:0}", iZmin0, iZmax0));
 
                 var zCollisions = new List<double>();
                 for (int i = zRange[0]; i <= zRange[1]; i++)
@@ -1031,10 +1037,7 @@ namespace VMS.TPS
             // radius of the sphere ROI in mm
             double radius = 5;
 
-
             var gridRanges = GetGridRangesForSphere(radius, isocenterPosition, gridOrigin, gridReses, gridSizes);
-
-            var voxels = new double[(gridRanges[3] - gridRanges[0] + 1) * (gridRanges[4] - gridRanges[1] + 1) * (gridRanges[5] - gridRanges[2] + 1)];
 
             int numVoxels = 0;
             double sum = 0;
@@ -1060,7 +1063,6 @@ namespace VMS.TPS
                         }
 
                         var value = image.VoxelToDisplayValue(zImage[k, j]);
-                        voxels[numVoxels] = value;
                         sum += value;
                         numVoxels += 1;
                     }
@@ -1236,98 +1238,35 @@ namespace VMS.TPS
 
         public static int[] GetGridRangesForSphere(double radius, double[] center, double[] gridOrigin, double[] gridReses, int[] gridSizes)
         {
+            var xGridRanges = GetGridRange1d(radius, center[0], gridOrigin[0], gridReses[0], gridSizes[0]);
+            var yGridRanges = GetGridRange1d(radius, center[1], gridOrigin[1], gridReses[1], gridSizes[1]);
+            var zGridRanges = GetGridRange1d(radius, center[2], gridOrigin[2], gridReses[2], gridSizes[2]);
+
             var gridRanges = new int[6];
 
-            int iXCenter = (int)((center[0] - gridOrigin[0]) / gridReses[0]);
-            int iYCenter = (int)((center[1] - gridOrigin[1]) / gridReses[1]);
-            int iZCenter = (int)((center[2] - gridOrigin[2]) / gridReses[2]);
-
-            int xRange = (int)(Math.Ceiling(radius / gridReses[0]));
-            int yRange = (int)(Math.Ceiling(radius / gridReses[1]));
-            int zRange = (int)(Math.Ceiling(radius / gridReses[2]));
-
-            // Lower limits
-            gridRanges[0] = iXCenter - xRange;
-            if (center[0] - (gridOrigin[0] + gridRanges[0] * gridReses[0]) < radius)
-            {
-                gridRanges[0] -= 1;
-            }
-            gridRanges[1] = iYCenter - yRange;
-            if (center[1] - (gridOrigin[1] + gridRanges[1] * gridReses[1]) < radius)
-            {
-                gridRanges[1] -= 1;
-            }
-            gridRanges[2] = iZCenter - zRange;
-            if (center[2] - (gridOrigin[2] + gridRanges[2] * gridReses[2]) < radius)
-            {
-                gridRanges[2] -= 1;
-            }
-
-            // check if gridRanges is out of lower boundary
-            if (gridRanges[0] < 0)
-            {
-                gridRanges[0] = 0;
-            }
-            if (gridRanges[1] < 0)
-            {
-                gridRanges[1] = 0;
-            }
-            if (gridRanges[2] < 0)
-            {
-                gridRanges[2] = 0;
-            }
-
-            // Upper limits
-            gridRanges[3] = iXCenter + xRange;
-            if ((gridOrigin[0] + gridRanges[3] * gridReses[0] - center[0]) < radius)
-            {
-                gridRanges[3] += 1;
-            }
-            gridRanges[4] = iYCenter + yRange;
-            if ((gridOrigin[1] + gridRanges[4] * gridReses[1] - center[1]) < radius)
-            {
-                gridRanges[4] += 1;
-            }
-            gridRanges[5] = iZCenter + zRange;
-            if ((gridOrigin[2] + gridRanges[5] * gridReses[2] - center[2]) < radius)
-            {
-                gridRanges[5] += 1;
-            }
-
-            // check if gridRanges is out of upper boundary
-            if (gridRanges[3] >= gridSizes[0])
-            {
-                gridRanges[3] = gridSizes[0] - 1;
-            }
-            if (gridRanges[4] >= gridSizes[1])
-            {
-                gridRanges[4] = gridSizes[1] - 1;
-            }
-            if (gridRanges[5] >= gridSizes[2])
-            {
-                gridRanges[5] = gridSizes[2] - 1;
-            }
+            gridRanges[0] = xGridRanges[0];
+            gridRanges[1] = yGridRanges[0];
+            gridRanges[2] = zGridRanges[0];
+            gridRanges[3] = xGridRanges[1];
+            gridRanges[4] = yGridRanges[1];
+            gridRanges[5] = zGridRanges[1];
 
             return gridRanges;
         }
 
-        public static int[] GetGridRange1d(double radius, double center, double origin, double size, double res)
+        public static int[] GetGridRange1d(double radius, double center, double origin, double res, int size)
         {
             var gridRanges = new int[2];
 
-            int iCenter = (int)((center - origin) / res);
-            int range = (int)(Math.Ceiling(radius / res));
-
-            gridRanges[0] = iCenter - range;
-            if (center - (origin + gridRanges[0] * res) < radius)
+            gridRanges[0] = (int)Math.Floor(((center - radius) - origin) / res);
+            if (gridRanges[0] < 0)
             {
-                gridRanges[0] -= 1;
+                gridRanges[0] = 0;
             }
-
-            gridRanges[1] = iCenter + range;
-            if (origin + gridRanges[1] * res - center < radius)
+            gridRanges[1] = (int)Math.Ceiling(((center + radius) - origin) / res);
+            if (gridRanges[1] >= size)
             {
-                gridRanges[1] += 1;
+                gridRanges[1] = size-1;
             }
 
             return gridRanges;
